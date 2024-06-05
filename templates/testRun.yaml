@@ -1,0 +1,21 @@
+apiVersion: k6.io/v1alpha1
+kind: TestRun
+metadata:
+  name: "{{ .Values.testRunName }}"
+spec:
+  parallelism: "{{ .Values.parallelismCount }}"
+  script:
+    configMap:
+      name: "{{ .Values.configMap.name }}"
+      file: "{{ .Values.configMap.file }}"
+  arguments: --tag testid="{{ .Values.testid }}"
+  runner:
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    env:
+    {{- range $key, $value := .Values.env }}
+    - name: {{ $key }}
+      value: {{ $value | quote }}
+    {{- end }}
+    envFrom:
+    - configMapRef:
+        name: "{{ .Values.configMap.prometheusConfigName }}"

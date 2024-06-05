@@ -1,0 +1,13 @@
+
+{{- if .Values.namespace.create }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{- include "k6-csi.namespace" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "k6-csi.fullname" . }}
+    control-plane: "controller-manager"
+    {{- with .Values.customLabels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+{{- end }}

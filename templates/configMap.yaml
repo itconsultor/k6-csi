@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  simple.js: |-
+  {{ .Files.Get "simple.js" | nindent 8 }}
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.name }}
+  namespace: {{- include "k6-csi.namespace" . }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.configMap.prometheusConfigName }}" 
+  namespace: {{- include "k6-csi.namespace" . }}
+data:
+  K6_PROMETHEUS_RW_SERVER_URL: "{{ .Values.configMap.prometheusRemoteWriteUrl }}"
+  K6_PROMETHEUS_RW_STALE_MARKERS: "{{ .Values.configMap.prometheusRwStaleMarker }}"
